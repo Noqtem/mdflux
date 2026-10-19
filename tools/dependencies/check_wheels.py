@@ -43,6 +43,22 @@ def supports_manylinux(filename: str) -> bool:
     )
 
 
+def supports_macos_arm64(filename: str) -> bool:
+    return filename.endswith(".whl") and "macosx" in filename and (
+        "arm64" in filename or "universal2" in filename
+    ) and (
+        "cp312" in filename or "abi3" in filename or "-none-macosx" in filename
+    )
+
+
+def supports_macos_x64(filename: str) -> bool:
+    return filename.endswith(".whl") and "macosx" in filename and (
+        "x86_64" in filename or "universal2" in filename
+    ) and (
+        "cp312" in filename or "abi3" in filename or "-none-macosx" in filename
+    )
+
+
 def release_files(name: str, version: str) -> list[str]:
     url = f"https://pypi.org/pypi/{name}/{version}/json"
     try:
@@ -77,14 +93,18 @@ def main() -> int:
                 continue
             windows = [filename for filename in native_files if supports_windows(filename)]
             manylinux = [filename for filename in native_files if supports_manylinux(filename)]
+            macos_arm64 = [filename for filename in native_files if supports_macos_arm64(filename)]
+            macos_x64 = [filename for filename in native_files if supports_macos_x64(filename)]
             record: dict[str, object] = {
                 "name": name,
                 "version": version,
                 "windows_x64": windows,
                 "manylinux_x64": manylinux,
+                "macos_arm64": macos_arm64,
+                "macos_x64": macos_x64,
             }
             native.append(record)
-            if not windows or not manylinux:
+            if not windows or not manylinux or not macos_arm64:
                 unsupported.append(record)
     except (OSError, ValueError, RuntimeError) as exc:
         print(f"wheel check failed: {exc}", file=sys.stderr)
@@ -93,7 +113,7 @@ def main() -> int:
     report = {
         "schema": 1,
         "lock_sha256": hashlib.sha256(args.lock.read_bytes()).hexdigest(),
-        "targets": ["windows-x64", "linux-x64-glibc"],
+        "targets": ["windows-x64", "linux-x64-glibc", "macos-arm64"],
         "native_packages": native,
         "unsupported": unsupported,
     }
@@ -102,7 +122,7 @@ def main() -> int:
     if unsupported:
         print(f"wheel check found {len(unsupported)} unsupported native package(s)", file=sys.stderr)
         return 1
-    print(f"wheel check OK; {len(native)} native packages support Windows x64 and manylinux x64")
+    print(f"wheel check OK; {len(native)} native packages support Windows x64, Linux x64, and macOS arm64")
     return 0
 
 

@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Any
 
 
-PLATFORMS = frozenset({"windows-x64", "linux-x64-glibc"})
+PLATFORMS = frozenset({"windows-x64", "linux-x64-glibc", "macos-arm64", "macos-x64"})
 EDITIONS = frozenset({"lite", "full"})
 FULL_COMPONENTS = ["core", "ocr", "audio-runtime"]
 LITE_COMPONENTS = ["core"]
