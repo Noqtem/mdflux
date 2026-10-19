@@ -6,7 +6,13 @@ All notable changes to this project are documented here. The format is based on
 
 ## [Unreleased]
 
-## [0.3.0] - 2026-08-23
+### Added
+
+- macOS support for Apple Silicon (`macos-arm64`) and Intel (`macos-x64`).
+- Native macOS `WebKit.framework` (`WKWebView`) and Cocoa integration with zero external runtime dependencies.
+- Mach kernel virtual memory statistics query (`host_statistics64` with `mach_port_deallocate`) for RAM detection.
+- macOS portable packaging infrastructure (`make-portable-macos.sh` and `make-portable-macos-full.sh`) with strict archive verification.
+- GitHub Actions CI matrix jobs for macOS (`rust-macos` and `sidecar-macos`).
 
 ### Added
 

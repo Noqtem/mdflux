@@ -6,6 +6,8 @@
 | --- | --- | --- | --- | --- |
 | `windows-x64` | x64 | N/A (Windows) | Lite, Full | Supported in v0.3.0. The v0.2.0 portable archive remains available under its legacy Lite-style name. |
 | `linux-x64-glibc` | x64 | glibc | Lite, Full | Supported in v0.3.0 on the Ubuntu 22.04-or-newer baseline described below. |
+| `macos-arm64` | arm64 (Apple Silicon) | libSystem (macOS) | Lite, Full | Supported in v0.3.0. Full bundles standalone Python 3.12, MarkItDown, RapidOCR, and Whisper. |
+| `macos-x64` | x64 (Intel) | libSystem (macOS) | Lite | Supported in v0.3.0. Lite provisions MarkItDown core on first run. (Full is omitted as upstream onnxruntime no longer provides x86_64 macOS wheels on PyPI). |
 
 ## Linux baseline
 
@@ -17,7 +19,6 @@ MDFlux does **not** target:
 - Linux ARM64 (`aarch64`)
 - musl-based distributions (Alpine, etc.) as first-class releases
 - AppImage, Flatpak, or native `.deb` installers in this release cycle
-- macOS (planned separately; see [ROADMAP.md](../../ROADMAP.md))
 
 ## System GUI dependencies
 
@@ -43,13 +44,20 @@ Build hosts additionally need development packages (WebKitGTK/GTK/OpenSSL header
 
 OCR on Linux may also require `libgl1` and `libgomp1` at runtime.
 
+### macOS
+
+- macOS 12 Monterey or newer on Apple Silicon (`arm64`) or Intel (`x86_64`)
+- Built-in Apple **WebKit** framework (`WKWebView`) and **Cocoa** (`AppKit`)
+- No Homebrew or third-party runtime libraries required
+
 ## Support policy
 
-1. **Supported for bug reports and release verification:** `windows-x64` and `linux-x64-glibc`,
-   **Lite** and **Full**, **x64 only**.
+1. **Supported for bug reports and release verification:** `windows-x64` (Lite, Full),
+   `linux-x64-glibc` (Lite, Full), `macos-arm64` (Lite, Full), and `macos-x64` (Lite).
 2. Check the release notes for the versions and platforms currently available for download.
-3. **Out-of-scope platforms** may compile opportunistically but are unsupported; please do not
-   file release-blocking bugs for ARM, musl, or macOS until listed in the support matrix above.
+3. **Out-of-scope platforms** (such as Linux ARM64, musl distributions, or macOS x64 Full)
+   may compile or run opportunistically but are unsupported; please do not file release-blocking
+   bugs for platforms or editions not listed in the support matrix above.
 4. **Security issues:** follow [SECURITY.md](../../SECURITY.md); do not use public issues.
 
 ## Runtime status (for bug reports)
